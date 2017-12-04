@@ -1,0 +1,27 @@
+# Docker compose for netflix conductor + elasticsearch + dynomite
+version: '2'
+services:
+  conductor-server:
+    environment:
+      - CONFIG_PROP=config.properties
+    image: kkltcjk/conductor:server
+    ports:
+      - 8888:8080
+    links:
+      - elasticsearch:es
+      - dynomite:dyno1
+
+  conductor-ui:
+    environment:
+      - WF_SERVER=http://conductor-server:8888/api/
+    image: kkltcjk/conductor:ui
+    ports:
+      - 1948:5000
+    links:
+      - conductor-server
+
+  dynomite:
+    image: kkltcjk/conductor:dynomite
+
+  elasticsearch:
+    image: kkltcjk/conductor:elasticsearch
